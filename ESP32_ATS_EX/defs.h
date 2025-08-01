@@ -44,7 +44,7 @@
 // Default values
 #define MIN_ELAPSED_TIME 100
 #define MIN_ELAPSED_RSSI_TIME 150
-#define DEFAULT_VOLUME 15
+#define DEFAULT_VOLUME 17
 #define ADJUSTMENT_ACTIVE_TIMEOUT 3000
 
 // Band settings

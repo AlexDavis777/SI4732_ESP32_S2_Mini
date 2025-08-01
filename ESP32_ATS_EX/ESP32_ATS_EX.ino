@@ -93,7 +93,7 @@ void setup()
         {
             oled.print("-"); //Just fancy animation
             bleep(100*i, 20);//Generate a tone on pin 1 for 30 milliseconds
-            delay(50);
+            delay(60);
         }
     }
     else
@@ -235,12 +235,30 @@ uint8_t bandEvent(uint8_t event, uint8_t pin)
 // Handle encoder direction
 void rotaryEncoder()
 {
-    uint8_t encoderStatus = g_encoder.process();
-    if (encoderStatus)
-    {
-        g_encoderCount = (encoderStatus == DIR_CW) ? 1 : -1;
-        g_seekStop = true;
-    }
+  // Encoder interrupt routine for both pins. Updates counter
+  // if they are valid and have rotated a full indent
+  
+  static uint8_t old_AB = 3;  // Lookup table index
+  static int8_t encval = 0;   // Encoder value  
+  static const int8_t enc_states[]  = {0,-1,1,0,1,0,0,-1,-1,0,0,1,0,1,-1,0}; // Lookup table
+ 
+  old_AB <<=2;  // Remember previous state
+ 
+  if (digitalRead(ENCODER_PIN_A)) old_AB |= 0x01; // Add current state of pin A
+  if (digitalRead(ENCODER_PIN_B)) old_AB |= 0x02; // Add current state of pin B
+  
+   
+  encval += enc_states[( old_AB & 0x0f )];
+ 
+  // Update counter if encoder has rotated a full indent, that is at least 4 steps
+  if( encval > 3 ) {        // Four steps forward
+    g_encoderCount++;              // Increase counter
+    encval = 0;
+  }
+  else if( encval < -3 ) {  // Four steps backwards
+    g_encoderCount--;               // Decrease counter
+    encval = 0;
+  }
 }
 
 //Saves more flash image size
@@ -259,7 +277,7 @@ void saveAllReceiverInformation()
     uint8_t addr = EEPROM_DATA_START_ADDRESS;
     //EEPROM.write(EEPROM_VERSION_ADDRESS, APP_VERSION);
     EEPROM.write(EEPROM_APP_ID_ADDRESS, EEPROM_APP_ID);
-
+    g_volume = g_si4735.getVolume();
     EEPROM.write(addr++, g_muteVolume > 0 ? g_muteVolume : g_volume);
     EEPROM.write(addr++, g_bandIndex);
     EEPROM.write(addr++, g_currentMode);
@@ -704,7 +722,6 @@ for (int i = 0; i < sizeof(bands)/sizeof(bands[0]); ++i) {
 }
 
 oledPrint(labelToPrint, 0, 6, DEFAULT_FONT, g_cmdBand && g_currentMode != FM);
-
 }
 
 //Draw volume level
@@ -741,16 +758,16 @@ void showCharge(bool forceShow)
     constexpr const uint8_t rows = 10;
     const uint16_t dischargeTable[rows][2] =
     {
-        { 643, 100 },  //4.15v
-        { 620, 95  },  //4.05v
-        { 604, 90  },  //3.90v
-        { 581, 80  },  //3.75v
-        { 573, 60  },  //3.70v
-        { 558, 40  },  //3.60v
-        { 542, 20  },  //3.50v
-        { 503, 15  },  //3.25v
-        { 496, 5  },   //3.20v
-        { 488, 0  },   //3.15v
+        { 7600, 99 },  //8.3v
+        { 7300, 95  },  //8.1v
+        { 7000, 90  },  //7.80v
+        { 6800, 80  },  //7.5v
+        { 6600, 60  },  //7.40v for 2x 18650 = 7.4 volt
+        { 6400, 40  },  //7.20v
+        { 6300, 20  },  //7.0v
+        { 6200, 15  },  //6.5v
+        { 6100, 5  },   //6.40v
+        { 6000, 0  },   //6.3v
     };
 
     auto getBatteryPercentage = [&](uint16_t currentSamples) -> uint8_t
