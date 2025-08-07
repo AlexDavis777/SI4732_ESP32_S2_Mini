@@ -2,7 +2,9 @@
 
 This folder contains the Kicad files
 
-
+<p align="center">
+    <img src="img/inside.png" alt="Icon" />
+</p>
 
 
 
