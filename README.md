@@ -14,11 +14,6 @@ https://github.com/goshante/ats20_ats_ex
 </p>
 
 
-
-<p align="center">
-    <img src="img/inside.png" alt="Icon" />
-</p>
-
 Using this Aliexpress box
 
 <p align="center">
