@@ -16,6 +16,15 @@ https://github.com/pu2clr/SI4735
 </p>
 
 # CT2JWF ESP32_SI473X_ALL_IN_ONE_OLED_CT2JWF_EEPROM_RDS_v8.0.1)
+<p align="left">
+    <img src="img/mini1.jpg" alt="Icon" />
+</p>
+<p align="right">
+    <img src="img/mini1.jpg" alt="Icon" />
+</p>
+
+# ESP 32 Minimini with Bandscan
+
 
 # LZ1PPL
 https://github.com/LZ1PPL/Si4735
