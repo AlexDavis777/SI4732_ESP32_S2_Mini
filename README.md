@@ -9,16 +9,16 @@ https://github.com/LZ1PPL/Si4735
 
 https://github.com/goshante/ats20_ats_ex
 
-<p align="left">
+<p align="center">
     <img src="img/front.jpg" alt="Icon" />
 </p>
-<p align="right">
+<p align="center">
     <img src="img/P1010694.jpg" alt="Icon" />
 </p>
-<p align="left">
+<p align="center">
     <img src="img/mini1.jpg" alt="Icon" />
 </p>
-<p align="right">
+<p align="center">
     <img src="img/mini2.jpg" alt="Icon" />
 </p>
 
