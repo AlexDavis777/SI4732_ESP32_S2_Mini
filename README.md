@@ -10,7 +10,7 @@ https://github.com/LZ1PPL/Si4735
 https://github.com/goshante/ats20_ats_ex
 
 <p align="left">
-    <img src="img/front.png" alt="Icon" />
+    <img src="img/front.jpg" alt="Icon" />
 </p>
 <p align="right">
     <img src="img/P1010694.jpg" alt="Icon" />
