@@ -6,7 +6,7 @@ project and precompiled bin files in case of future problems with compling on Ar
 # goshante ESP32_ATS_EX
 https://github.com/goshante/ats20_ats_ex
 <p align="center">
-    <img src="img/front.png" alt="Icon" />
+    <img src="img/front.jpg" alt="Icon" />
 </p>
 
 # pu2clr ESP32_OLED_CHINESE
@@ -20,10 +20,10 @@ https://github.com/pu2clr/SI4735
 #
 
 # ESP 32 Minimini with Bandscan
-<p align="left">
+<p align="center">
     <img src="img/mini1.jpg" alt="Icon" />
 </p>
-<p align="right">
+<p align="center">
     <img src="img/mini2.jpg" alt="Icon" />
 </p>
 
