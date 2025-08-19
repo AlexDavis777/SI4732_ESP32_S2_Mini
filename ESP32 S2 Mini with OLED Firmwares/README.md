@@ -1,7 +1,7 @@
 # Receiver with a big 2.42 oled screen using Si4732 and ESP32 S2 Mini.
 
 This folder contains popular firmware sources converted to work with this hardware
-project and precomplied bin files in case of future problems with compliing on Arduino IDE.
+project and precompiled bin files in case of future problems with compling on Arduino IDE.
 
 # goshante ESP32_ATS_EX
 https://github.com/goshante/ats20_ats_ex
@@ -16,8 +16,8 @@ https://github.com/pu2clr/SI4735
 </p>
 
 # CT2JWF ESP32_SI473X_ALL_IN_ONE_OLED_CT2JWF_EEPROM_RDS_v8.0.1)
-
-
+#
+#
 
 # ESP 32 Minimini with Bandscan
 <p align="left">
