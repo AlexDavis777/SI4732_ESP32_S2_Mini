@@ -19,7 +19,14 @@ bool g_seekStop = false;
 uint32_t g_lastAdjustmentTime = 0;
 
 uint8_t g_muteVolume = 0;
+uint8_t buffer[BUFFER_SIZE];  // OLED buffer (1 byte = 8 pixels, 128x64 = 1024 pixels)
 int g_currentBFO = 0;
+
+// Converts signal strength (RSSI) to bar height (max 63)
+int signalStrengthToHeight(int strength, int maxStrength = 100) {
+  int height = map(strength, 0, maxStrength, 0, SCREEN_HEIGHT - 1);
+  return constrain(height, 0, SCREEN_HEIGHT - 1);
+}
 
 // Encoder buttons
 SimpleButton  btn_Bandwidth(BANDWIDTH_BUTTON);

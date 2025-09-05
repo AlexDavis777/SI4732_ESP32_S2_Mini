@@ -16,6 +16,10 @@
 // OLED Const values
 #define DEFAULT_FONT FONT8X16POB
 #define RST_PIN -1
+#define SCREEN_WIDTH 128    // OLED display width
+#define SCREEN_HEIGHT 64    // OLED display height
+#define BUFFER_SIZE (SCREEN_WIDTH * SCREEN_HEIGHT / 8)
+#define OLED_ADDRESS 0x3C   // I2C address of the OLED display (for 128x64 SSD1306)
 
 //#define RESET_PIN 12
 #define RESET_PIN 35 //esp32

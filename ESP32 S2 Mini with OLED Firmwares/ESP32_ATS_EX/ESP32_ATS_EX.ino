@@ -15,7 +15,6 @@
 #include <Tiny4kOLED.h>
 #include <PixelOperatorBold.h> 
 #include <Wire.h>
-
 #include "font14x24sevenSeg.h"
 #include "Rotary.h"
 #include "SimpleButton.h"
@@ -98,7 +97,7 @@ void setup()
     }
     else
     {
-        oledPrint(" ATS-20 RECEIVER", 0, 0, DEFAULT_FONT, true);
+        oledPrint(" ATS-20 RECEIVER", 0, 0, DEFAULT_FONT, false);
         oledPrint("ATS_EX v1.18", 16, 2);
         oledPrint("Goshante 2024", 12, 4);
         oledPrint("Best firmware", 12, 6);
@@ -655,8 +654,8 @@ void showSettings()
 
 void showSettingsTitle()
 {
-    oledPrint("   SETTINGS  ", 0, 0, DEFAULT_FONT, true);
-    oled.invertOutput(true);
+    oledPrint("   SETTINGS  ", 0, 0, DEFAULT_FONT, false);
+    oled.invertOutput(false);
     oled.print(uint8_t(g_SettingsPage));
     oled.print("/");
     oled.print(uint8_t(g_SettingsMaxPages));
@@ -758,9 +757,9 @@ void showCharge(bool forceShow)
     constexpr const uint8_t rows = 10;
     const uint16_t dischargeTable[rows][2] =
     {
-        { 7400, 99 },  //8.3v
-        { 7000, 95  },  //8.1v
-        { 6500, 90  },  //7.80v
+        { 7000, 99 },  //8.3v
+        { 6600, 95  },  //8.1v
+        { 6400, 90  },  //7.80v
         { 6200, 80  },  //7.5v
         { 5500, 60  },  //7.40v for 2x 18650 = 7.4 volt
         { 5000, 40  },  //7.20v
@@ -1870,7 +1869,9 @@ saveAttempt:
                 updateLowerDisplayLine();
         }
     }
-    if (BUTTONEVENT_SHORTPRESS == btn_Mode.checkEvent(simpleEvent))
+    uint8_t modeEvent = btn_Mode.checkEvent((uint8_t (*)(uint8_t, uint8_t))modeEvent);
+    //if (BUTTONEVENT_SHORTPRESS == btn_Mode.checkEvent(simpleEvent))
+    if (BUTTONEVENT_SHORTPRESS == modeEvent)
     {
         if (!g_settingsActive)
         {
@@ -1915,6 +1916,14 @@ saveAttempt:
             else
                 doRDS();
 #endif
+        }
+    }
+    if (BUTTONEVENT_LONGPRESSDONE == modeEvent)
+    {
+        if (!g_settingsActive)
+        {
+        quickScan(g_currentFrequency, g_tabStep[g_stepIndex]);
+        showStatus();
         }
     }
 }
