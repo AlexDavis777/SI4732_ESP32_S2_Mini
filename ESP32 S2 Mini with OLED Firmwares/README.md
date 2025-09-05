@@ -3,7 +3,7 @@
 This folder contains popular firmware sources converted to work with this hardware
 project and precompiled bin files in case of future problems with compiling on Arduino IDE.
 
-# goshante ESP32_ATS_EX
+# goshante ESP32_ATS_EX with Bandscan (long press Mode)
 https://github.com/goshante/ats20_ats_ex
 <p align="center">
     <img src="img/front.jpg" alt="Icon" />
