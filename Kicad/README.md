@@ -5,7 +5,13 @@ This folder contains the Kicad files
 <p align="center">
     <img src="img/inside.png" alt="Icon" />
 </p>
+<p align="center">
+    <img src="img/main_pcb.png" alt="Icon" />
+</p>
 
+<p align="center">
+    <img src="img/front_panel.png" alt="Icon" />
+</p>
 
 
 
