@@ -130,102 +130,201 @@ void bleep(int freq, int time) //Generate a freq tone for time duration
   noTone(speakerPin);      // Stop the tone
 }
 
-// Function to scan around curr_freq and display signal strength bars
+// === handleEncoder ===
+void handleEncoder() {
+  noInterrupts();
+  dir = g_encoderCount;
+  g_encoderCount = 0;
+  interrupts();
+  if (dir == 0) return;
+  direction = (dir > 0) ? 1 : -1;
+}
+
+// === Main Function ===
 void quickScan(int curr_freq, int step_khz) {
-  const int center_x = SCREEN_WIDTH / 2 - 1;  // 63
-  int max_strength = 0;
-  int strong_freq = curr_freq;
+  const int barHeightMax = 50;       // Max bar height (pixels)
+  const int numBars = SCREEN_WIDTH;  // Up to 128 bars (1 pixel per bar)
   display.begin(SSD1306_SWITCHCAPVCC,0x3C);
   display.clearDisplay();
   display.setTextColor(WHITE);
   oled.clear();
-
-  // Measure center frequency signal strength
-  g_si4735.setFrequency(curr_freq);
-  g_si4735.setSeekAmRssiThreshold(10); // default is 25
-  g_si4735.setSeekAmSNRThreshold(3); // default is 5
-  g_si4735.getCurrentReceivedSignalQuality();
-  int center_strength = g_si4735.getCurrentRSSI();
-  max_strength = center_strength;
+  bool isFM = false;
   
+  // --- Define band limits ---
+  const int AM_MIN = 152;            // kHz
+  const int AM_MAX = 30000;           // kHz
+  const int FM_MIN = 6400;          // 64 MHz
+  const int FM_MAX = 10800;         // 108 MHz
 
-  // Plot center frequency
-  int h = signalStrengthToHeight(center_strength);
-  display.setCursor(56, 8);
-  display.print(curr_freq);
-  display.drawLine(center_x, SCREEN_HEIGHT + 4, center_x, SCREEN_HEIGHT + 4 - h, WHITE);
-  display.display();
+  // Detect band from current frequency
+  if (g_currentMode == FM){
+  isFM = 1;
+  }
+  else
+  isFM = 0;
+  int step = step_khz;
+  const char* bandName = isFM ? "FM" : "AM";
 
-  // LEFT side (lower freqs)
-  int x = center_x - 1;
-  for (int f = curr_freq - step_khz; f >= g_bandList[g_bandIndex].minimumFreq && x >= 0; f -= step_khz, x--) {
-    g_si4735.setFrequency(f);
+  int cursorX = numBars / 2;         
+  bool selected = false;
+  unsigned long lastPress = 0;
+
+  uint8_t barHeights[numBars];
+
+  // === Step 1: Determine scan range and limits ===
+  long scanRange = (numBars / 2) * step;
+  long startFreq = curr_freq - scanRange;
+  long endFreq   = curr_freq + scanRange;
+
+  long bandMin = isFM ? FM_MIN : AM_MIN;
+  long bandMax = isFM ? FM_MAX : AM_MAX;
+
+  // --- Handle lower/upper band limits ---
+  if (startFreq < bandMin) {
+    startFreq = bandMin;
+    endFreq = startFreq + numBars * step;
+    if (endFreq > bandMax) endFreq = bandMax;
+  } else if (endFreq > bandMax) {
+    endFreq = bandMax;
+    startFreq = endFreq - numBars * step;
+    if (startFreq < bandMin) startFreq = bandMin;
+  }
+
+  // --- Adjust cursor based on clipped range ---
+  if (curr_freq < startFreq) curr_freq = startFreq;
+  if (curr_freq > endFreq)   curr_freq = endFreq;
+  cursorX = (curr_freq - startFreq) / step;
+  if (cursorX < 0) cursorX = 0;
+  if (cursorX >= numBars) cursorX = numBars - 1;
+  
+      display.setCursor(90, 0);
+  if (isFM)
+      display.print("Mhz");
+  else
+      display.print("khz");
+      
+      display.setCursor(16, 0);
+  if (isFM)
+      display.print("FM");
+  else
+      display.print("AM");
+
+  // === Step 2: Scan signal strengths ===
+  for (int i = 0; i < numBars; i++) {
+    long freq = startFreq + (i * step);
+    if (freq > bandMax) break;
+    g_si4735.setFrequency(freq);
     g_si4735.setSeekAmRssiThreshold(10); // default is 25
     g_si4735.setSeekAmSNRThreshold(3); // default is 5
     g_si4735.getCurrentReceivedSignalQuality();
-    int strength = g_si4735.getCurrentRSSI();
-    h = signalStrengthToHeight(strength);
-    display.drawLine(x, SCREEN_HEIGHT + 4, x, SCREEN_HEIGHT + 4 - h, WHITE);
-    display.display();
-    if (strength > max_strength) {
-      max_strength = strength;
-      strong_freq = f;
-    }
+    int rssi = g_si4735.getCurrentRSSI();
+    int barHeight = map(rssi, 0, 50, 1, barHeightMax);
+    if (barHeight > barHeightMax) barHeight = barHeightMax;
+    barHeights[i] = barHeight;
+    int barTop = SCREEN_HEIGHT - barHeights[i];
+    display.drawFastVLine(i, barTop, barHeights[i], WHITE);
+    display.display();    
   }
-  // RIGHT side (higher freqs)
-  x = center_x + 1;
-  for (int f = curr_freq + step_khz; f <= g_bandList[g_bandIndex].maximumFreq && x < SCREEN_WIDTH; f += step_khz, x++) {
-    g_si4735.setFrequency(f);
-    g_si4735.setSeekAmRssiThreshold(10); // default is 25
-    g_si4735.setSeekAmSNRThreshold(3); // default is 5
-    g_si4735.getCurrentReceivedSignalQuality();
-    int strength = g_si4735.getCurrentRSSI();
-    h = signalStrengthToHeight(strength);
-    display.drawLine(x, SCREEN_HEIGHT + 4, x, SCREEN_HEIGHT + 4 - h, WHITE);
-    display.display();
-    if (strength > max_strength) {
-      max_strength = strength;
-      strong_freq = f;
-    }
-  } 
-    // --- Draw marker for strongest signal ---
-  if (strong_freq != curr_freq) {
-    int diff = (strong_freq - curr_freq) / step_khz;
-    int marker_x = center_x + diff;
+  g_si4735.setFrequency(curr_freq);
 
-    if (marker_x >= 1 && marker_x < SCREEN_WIDTH-1) {
-      display.setTextColor(WHITE,BLACK); // Set text to plot foreground and background colours
-      display.setCursor(40, 8);
-      display.print("        ");
-      display.setTextColor(WHITE);
-      display.drawCircle(marker_x, 12, 1, WHITE); // small marker at top
-      g_si4735.setFrequency(strong_freq);
+  // === Step 3: Display Loop ===
+  while (!selected) {
+    // Draw cursor
+    display.setTextColor(WHITE);
+    display.drawCircle(cursorX, 12, 2, WHITE); // small marker at top
+
+    // Compute and display frequency
+    long selectedFreq = startFreq + (cursorX * step);
+
+    // Format frequency for FM (MHz) or AM (kHz)
+    String freqText;
+    if (isFM)
+      freqText = String(selectedFreq / 100.0, 2);
+    else
+      freqText = String(selectedFreq);
+    display.setCursor(46, 0);
+    display.print(freqText);
+    display.display();
+    
+              // === Handle Button Press ==
+    if (digitalRead(VOLUME_BUTTON) == LOW) {
+    g_si4735.volumeUp();
+    delay(10);
     }
-  }
-  if (strong_freq == curr_freq)
-  {
-    g_si4735.setFrequency(curr_freq);
-  }
-  display.display();
-  delay(3000);
-  display.clearDisplay();
-  display.setCursor(10, 20);
-  display.printf("Freq Centre= ");
-  display.print(curr_freq);
-  display.setCursor(45, 32);
-  display.print("<-->");
-  display.setCursor(10, 44);
-  display.printf(" New Freq= ");
-  display.print(strong_freq);
-  display.display();
-  delay(3000);
-  // Return frequency if it's stronger than current
-   if (center_strength < max_strength)
-   {
-    curr_freq = strong_freq;
+    
+    if (digitalRead(AVC_BUTTON) == LOW) {
+    g_si4735.volumeDown();
+    delay(10);
+    }
+    
+          // === Handle Button Press ==
+    if (digitalRead(BANDWIDTH_BUTTON) == LOW) {
+    display.drawCircle(cursorX, 12, 2, BLACK);// erase cursor
+    cursorX --;
+    cursorX = constrain(cursorX, 0, numBars - 1);
+    display.fillRect(46, 0, 38, 12, BLACK);
+    g_si4735.setFrequency(selectedFreq);
+    delay(10);
+    display.display();   
+    }
+    
+    if (digitalRead(STEP_BUTTON) == LOW) {
+    display.drawCircle(cursorX, 12, 2, BLACK);// erase cursor
+    cursorX ++;
+    cursorX = constrain(cursorX, 0, numBars - 1);
+    display.fillRect(46, 0, 38, 12, BLACK);
+    g_si4735.setFrequency(selectedFreq);
+    delay(10);
+    display.display();   
+    }
+    // Check if the encoder has moved
+    if (g_encoderCount != 0)
+    handleEncoder(); 
+    {
+       delay(60);
+       if (direction == 1)
+       {
+            display.drawCircle(cursorX, 12, 2, BLACK);// erase cursor
+            cursorX++;
+            cursorX = constrain(cursorX, 0, numBars - 1);
+            display.fillRect(46, 0, 38, 12, BLACK);
+            g_si4735.setFrequency(selectedFreq);
+            Serial.println(direction);
+            direction = 0;
+            display.display();
+       }
+       delay(60);
+       if (direction == -1)
+       {
+            display.drawCircle(cursorX, 12, 2, BLACK);// erase cursor
+            cursorX--;
+            cursorX = constrain(cursorX, 0, numBars - 1);
+            display.fillRect(46, 0, 38, 12, BLACK);
+            g_si4735.setFrequency(selectedFreq);
+            Serial.println(direction);
+            direction = 0;
+            display.display();
+       }
+    }
+    
+    // === Handle Button Press ===
+    if (digitalRead(ENCODER_BUTTON) == LOW) {
+      selected = true;
+      lastPress = millis();
+      long chosenFreq = startFreq + (cursorX * step);
+      oled.clear();
+      display.setTextSize(2);
+      Serial.print("chosenFreq: ");
+      Serial.println(chosenFreq);
+      oledPrint("Chosen Frequency", 0, 2);
+      oledPrint(chosenFreq, 24, 4);
+      curr_freq = chosenFreq;
+      g_currentFrequency = curr_freq;
+      g_si4735.setFrequency(g_currentFrequency);
+      delay(2000);
+      oled.clear();
+      display.setTextSize(1);
+      return;
+    }
    }
-   g_currentFrequency = curr_freq;
-   g_si4735.setFrequency(g_currentFrequency);
-   oled.clear();
-}
-//=======================================================================================
+ }

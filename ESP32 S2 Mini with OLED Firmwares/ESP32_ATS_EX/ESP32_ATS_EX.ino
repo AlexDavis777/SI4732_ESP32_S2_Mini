@@ -28,7 +28,7 @@
 #define ESP32_I2C_SDA 39
 #define ESP32_I2C_SCL 40
 void showStatus(bool cleanFreq = false);
-void applyBandConfiguration(bool extraSSBReset);
+void applyBandConfiguration(bool extraSSBReset = false);
 
 bool isSSB()
 {
@@ -232,7 +232,7 @@ uint8_t bandEvent(uint8_t event, uint8_t pin)
 }
 
 // Handle encoder direction
-void rotaryEncoder()
+void ICACHE_RAM_ATTR rotaryEncoder()
 {
   // Encoder interrupt routine for both pins. Updates counter
   // if they are valid and have rotated a full indent

@@ -21,6 +21,8 @@ uint32_t g_lastAdjustmentTime = 0;
 uint8_t g_muteVolume = 0;
 uint8_t buffer[BUFFER_SIZE];  // OLED buffer (1 byte = 8 pixels, 128x64 = 1024 pixels)
 int g_currentBFO = 0;
+int direction = 0;
+int dir = 0;
 
 // Converts signal strength (RSSI) to bar height (max 63)
 int signalStrengthToHeight(int strength, int maxStrength = 100) {
