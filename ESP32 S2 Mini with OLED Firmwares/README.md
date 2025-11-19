@@ -8,7 +8,7 @@ https://github.com/goshante/ats20_ats_ex
 <p align="center">
     <img src="img/front.jpg" alt="Icon" />
 </p>
-Hold Mode button to activate Bandscan then navigate to adjcent signals using encoder and select the station.
+Hold Mode button to activate Bandscan then navigate to adjacent signals using BW, Step buutons and encoder then select the station.
 <p align="center">
     <img src="img/B_Scan.jpg" alt="Icon" />
 </p>
