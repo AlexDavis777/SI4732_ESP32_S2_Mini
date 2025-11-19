@@ -8,7 +8,10 @@ https://github.com/goshante/ats20_ats_ex
 <p align="center">
     <img src="img/front.jpg" alt="Icon" />
 </p>
-
+Hold Mode button to activate Bandscan then navigate to adjcent signals using encoder and select the station.
+<p align="center">
+    <img src="img/B_Scan.jpg" alt="Icon" />
+</p>
 # pu2clr ESP32_OLED_CHINESE
 https://github.com/pu2clr/SI4735
 <p align="center">
