@@ -4,6 +4,7 @@ This folder contains popular firmware sources converted to work with this hardwa
 project and precompiled bin files in case of future problems with compiling on Arduino IDE.
 
 # goshante ESP32_ATS_EX with Bandscan (long press Mode)
+Support for SI5351 or Crystal press mode button on startup to select which.
 https://github.com/goshante/ats20_ats_ex
 <p align="center">
     <img src="img/front.jpg" alt="Icon" />
