@@ -130,6 +130,59 @@ void bleep(int freq, int time) //Generate a freq tone for time duration
   noTone(speakerPin);      // Stop the tone
 }
 
+void runConfigMenu()
+{
+    int menuIndex = 0;   // 0 = Crystal, 1 = SI5351
+
+    oled.clear();
+    oled.setCursor(10, 0);
+    oled.print("CONFIG MODE");
+    oled.setCursor(0, 6);
+    oled.print("Press to Select");
+    oled.setCursor(0, 2);
+    oled.print(menuIndex == 0 ? "> Crystal" : "  Crystal");
+
+    oled.setCursor(0, 4);
+    oled.print(menuIndex == 1 ? "> SI5351" : "  SI5351");
+    delay(100);
+
+    while (true)
+    {
+        // --- Read rotary encoder ---
+        //if (g_encoderCount != 0){
+        //int dir = g_encoder.process();
+        //if (dir == DIR_CW) menuIndex = 1;
+        //if (dir == DIR_CCW) menuIndex = 0;
+        if (digitalRead(VOLUME_BUTTON) == LOW) menuIndex = 0;
+        delay(100);
+        if (digitalRead(AVC_BUTTON) == LOW) menuIndex = 1;
+        delay(100);
+        // --- Draw screen ---
+        oled.setCursor(0, 2);
+        oled.print(menuIndex == 0 ? "> Crystal" : "  Crystal (vol+");
+
+        oled.setCursor(0, 4);
+        oled.print(menuIndex == 1 ? "> SI5351" : "  SI5351 (vol-");
+
+        // --- Encoder button press ---
+            if (digitalRead(ENCODER_BUTTON) == LOW)
+            {
+                useSI5351 = (menuIndex == 1);
+                EEPROM.writeBool(500, useSI5351);
+                EEPROM.commit();
+
+                oled.clear();
+                oled.setCursor(0, 2);
+                oled.print("Saved:");
+                oled.setCursor(0, 4);
+                oled.print(useSI5351 ? "SI5351" : "Crystal");
+                delay(1200);
+                oled.clear();
+                return;  // return to normal setup()
+            }
+    }
+}
+
 // === handleEncoder ===
 void handleEncoder() {
   noInterrupts();
@@ -264,7 +317,6 @@ void quickScan(int curr_freq, int step_khz) {
     cursorX = constrain(cursorX, 0, numBars - 1);
     display.fillRect(46, 0, 38, 12, BLACK);
     g_si4735.setFrequency(selectedFreq);
-    delay(10);
     display.display();   
     }
     
@@ -274,7 +326,6 @@ void quickScan(int curr_freq, int step_khz) {
     cursorX = constrain(cursorX, 0, numBars - 1);
     display.fillRect(46, 0, 38, 12, BLACK);
     g_si4735.setFrequency(selectedFreq);
-    delay(10);
     display.display();   
     }
     // Check if the encoder has moved
@@ -289,7 +340,6 @@ void quickScan(int curr_freq, int step_khz) {
             cursorX = constrain(cursorX, 0, numBars - 1);
             display.fillRect(46, 0, 38, 12, BLACK);
             g_si4735.setFrequency(selectedFreq);
-            Serial.println(direction);
             direction = 0;
             display.display();
        }
@@ -301,7 +351,6 @@ void quickScan(int curr_freq, int step_khz) {
             cursorX = constrain(cursorX, 0, numBars - 1);
             display.fillRect(46, 0, 38, 12, BLACK);
             g_si4735.setFrequency(selectedFreq);
-            Serial.println(direction);
             direction = 0;
             display.display();
        }

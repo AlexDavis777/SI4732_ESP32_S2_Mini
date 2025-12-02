@@ -2,6 +2,7 @@
 
 long g_storeTime = millis();
 
+bool useSI5351 = false;   // false = Crystal, true = SI5351
 bool g_voltagePinConnnected = false;
 bool g_ssbLoaded = false;
 bool g_fmStereo = true;
@@ -19,16 +20,9 @@ bool g_seekStop = false;
 uint32_t g_lastAdjustmentTime = 0;
 
 uint8_t g_muteVolume = 0;
-uint8_t buffer[BUFFER_SIZE];  // OLED buffer (1 byte = 8 pixels, 128x64 = 1024 pixels)
 int g_currentBFO = 0;
 int direction = 0;
 int dir = 0;
-
-// Converts signal strength (RSSI) to bar height (max 63)
-int signalStrengthToHeight(int strength, int maxStrength = 100) {
-  int height = map(strength, 0, maxStrength, 0, SCREEN_HEIGHT - 1);
-  return constrain(height, 0, SCREEN_HEIGHT - 1);
-}
 
 // Encoder buttons
 SimpleButton  btn_Bandwidth(BANDWIDTH_BUTTON);
@@ -329,4 +323,6 @@ bool g_processFreqChange = 0;
 uint8_t g_volume = DEFAULT_VOLUME;
 
 Rotary g_encoder = Rotary(ENCODER_PIN_A, ENCODER_PIN_B);
+
 SI4735 g_si4735;
+Si5351 g_si5351;
