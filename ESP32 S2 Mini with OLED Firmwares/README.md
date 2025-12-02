@@ -6,7 +6,7 @@ project and precompiled bin files in case of future problems with compiling on A
 # goshante ESP32_ATS_EX with Bandscan (long press Mode)
 Support for SI5351 or Crystal press mode button on startup to select which.
 
-https://github.com/goshante/ats20_ats_ex
+
 <p align="center">
     <img src="img/front.jpg" alt="Icon" />
 </p>
@@ -15,7 +15,7 @@ Hold Mode button to activate Bandscan then navigate to adjacent signals using BW
     <img src="img/B_Scan.jpg" alt="Icon" />
 </p>
 # pu2clr ESP32_OLED_CHINESE
-https://github.com/pu2clr/SI4735
+
 <p align="center">
     <img src="img/P1010694.jpg" alt="Icon" />
 </p>
@@ -33,4 +33,4 @@ https://github.com/pu2clr/SI4735
 </p>
 
 # LZ1PPL
-https://github.com/LZ1PPL/Si4735
+
