@@ -15,7 +15,7 @@ Hold Mode button to activate Bandscan then navigate to adjacent signals using BW
     <img src="img/B_Scan.jpg" alt="Icon" />
 </p>
 
-# https://www.joaquim.org/si4732-radio/
+# joaquim si4732-radio
 
 <p align="center">
     <img src="img/waterfall1.jpg" alt="Icon" />
