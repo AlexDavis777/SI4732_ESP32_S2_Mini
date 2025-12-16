@@ -1,13 +1,15 @@
 # Receiver with a big 2.42 oled screen using Si4732 and ESP32 S2 Mini.
 
 This is work in progress based on the works of 
-# pu2clr, LZ1PPL and goshante
+# pu2clr, LZ1PPL, goshante and joaquimorg
 
 https://github.com/pu2clr/SI4735
 
 https://github.com/LZ1PPL/Si4735
 
 https://github.com/goshante/ats20_ats_ex
+
+https://github.com/joaquimorg/si4732-radio
 
 <p align="center">
     <img src="img/front.jpg" alt="Icon" />
