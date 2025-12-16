@@ -8,32 +8,6 @@ Based on [G8PTN's ATS_MINI](https://github.com/G8PTN/ATS_MINI).
 
 It harnesses the capabilities of the SI4732 module to deliver high-quality FM radio performance, while the innovative design optimizes simple hardware into a complete and versatile receiver platform.
 
-[<img src="https://img.youtube.com/vi/iMb66FNOmYM/hqdefault.jpg" width="560" />](https://www.youtube.com/watch?v=iMb66FNOmYM)
-[<img src="https://img.youtube.com/vi/ZbDGKxzLqTs/hqdefault.jpg" width="560" />](https://www.youtube.com/watch?v=ZbDGKxzLqTs)
-
-## Build
-
-<img src="./img/img_1.jpg" alt="Radio 1" width="560" />
-<img src="./img/img_2.jpg" alt="Radio 2" width="560" />
-<img src="./img/img_3.jpg" alt="Radio 3" width="560" />
-<img src="./img/img_4.jpg" alt="Radio 4" width="560" />
-<img src="./img/img_5.jpg" alt="Radio 5" width="560" />
-<img src="./img/img_6.jpg" alt="Radio 6" width="560" />
-<img src="./img/img_7.jpg" alt="Radio 7" width="560" />
-<img src="./img/img_8.jpg" alt="Radio 8" width="560" />
-
-### [Schematics](https://oshwlab.com/joaquimorg/si4732-radio)
-
-### [3D Case](https://www.tinkercad.com/things/8lZGNjQrsIt-si4732-radio?sharecode=HUZ-hwZfG91KAuRBbbe97_qAXLUEwu6S0yEopXSdGyc)
-
-### [LS027B7DH01 Breakout board](https://github.com/ddB0515/LS027B7DH01-Breakout-board)
-
-## Hardware Components
-
-- **ESP32-S2 Mini**
-- **SI4732 Module**
-- **360-Degree Rotary Encoder Module**
-- **Sharp LS027B7DH01 LCD:** A 2.7" display with 400x240 resolution.
 
 ## Project Inspiration and Credits
 
