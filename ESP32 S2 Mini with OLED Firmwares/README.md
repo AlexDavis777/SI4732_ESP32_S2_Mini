@@ -14,6 +14,16 @@ Hold Mode button to activate Bandscan then navigate to adjacent signals using BW
 <p align="center">
     <img src="img/B_Scan.jpg" alt="Icon" />
 </p>
+
+# https://www.joaquim.org/si4732-radio/
+
+<p align="center">
+    <img src="img/waterfall1.jpg" alt="Icon" />
+</p>
+<p align="center">
+    <img src="img/cw1.jpg" alt="Icon" />
+</p>
+
 # pu2clr ESP32_OLED_CHINESE
 
 <p align="center">
