@@ -321,7 +321,7 @@ int8_t menuIdx = MUTE;
 
 
 /* ---------------------------------------- */
-#define SAMPLES         1024          // Must be a power of 2
+#define SAMPLES         256          // Must be a power of 2
 #define SAMPLING_FREQ   8000        // Hz, must be 40000 or less due to ADC conversion time. Determines maximum frequency that can be analysed by the FFT Fmax=sampleF/2.
 #define AMPLITUDE       100          // Depending on your audio source level, you may need to alter this value. Can be used as a 'sensitivity' control.
 #define NOISE           1000         // Used as a crude noise filter, values below this are ignored
@@ -349,7 +349,7 @@ bool isCW = false;
 // Morse code settings
 #define FREQ_MIN 500           // Minimum frequency of interest (Hz)
 #define FREQ_MAX 900           // Maximum frequency of interest (Hz)
-//#define SIGNAL_THRESHOLD 700   //10000 Threshold for detecting a signal
+//#define SIGNAL_THRESHOLD 10000   //10000 Threshold for detecting a signal
 #define DOT_DURATION 80        // Typical dot duration in milliseconds
 #define DASH_DURATION 240      // Typical dash duration in milliseconds (3x dot)
 #define ELEMENT_GAP 80         // Gap between elements (dots/dashes) in ms
@@ -357,12 +357,12 @@ bool isCW = false;
 #define WORD_GAP 560           // Gap between words in ms (7x element gap)
 
 // Buffer for decoded characters
-const int MAX_BUFFER = 24;// smaller for 128 screen
+const int MAX_BUFFER = 22;// smaller for 128 screen
 char morseBuffer[7] = { 0 };  // Holds dots and dashes of current character
 int morseIndex = 0;
 char textBuffer[MAX_BUFFER] = { 0 };
 int textIndex = 0;
-int SIGNAL_THRESHOLD = 700;
+int SIGNAL_THRESHOLD = 4000;
 
 // Timing variables
 unsigned long signalStart = 0;
@@ -868,13 +868,14 @@ void drawMainVFO() {
 	}
 }
 
+
 uint8_t intensityToColor(int intensity) {
 	uint8_t color;
 
 	if (intensity == 0) {
 		color = 0;
 	}
-	else if (intensity < 2) {
+	else if (intensity < 4) {
 		color = 0;
 	}
 	else {
@@ -898,7 +899,7 @@ void getAudioData() {
 
 	newTime = micros();
 	for (int i = 0; i < SAMPLES; i++) {
-		vReal[i] = analogRead(AUDIO_INPUT);
+		vReal[i] = analogRead(AUDIO_INPUT) * 8; // * 16 to boost audio 
 		vImag[i] = 0;
 		while (micros() - newTime < sampling_period_us) {
 		}
@@ -1865,13 +1866,13 @@ void doCal(int16_t v) {
 void doCwl(int16_t v) {
 
 	if (v == 1) {
-		SIGNAL_THRESHOLD = SIGNAL_THRESHOLD + 50;
-		if (SIGNAL_THRESHOLD > 999) SIGNAL_THRESHOLD = 1000;
+		SIGNAL_THRESHOLD = SIGNAL_THRESHOLD + 100;
+		if (SIGNAL_THRESHOLD > 8999) SIGNAL_THRESHOLD = 9000;
 	}
 
 	else {
-		SIGNAL_THRESHOLD = SIGNAL_THRESHOLD - 50;
-		if (SIGNAL_THRESHOLD < 101) SIGNAL_THRESHOLD = 100;
+		SIGNAL_THRESHOLD = SIGNAL_THRESHOLD - 100;
+		if (SIGNAL_THRESHOLD < 2999) SIGNAL_THRESHOLD = 3000;
 	}
 
 	delay(MIN_ELAPSED_TIME); // waits a little more for releasing the button.
