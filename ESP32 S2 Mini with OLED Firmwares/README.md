@@ -32,7 +32,9 @@ Hold Mode button to activate Bandscan then navigate to adjacent signals using BW
 
 # CT2JWF ESP32_SI473X_ALL_IN_ONE_OLED_CT2JWF_EEPROM_RDS_v8.0.1)
 #
-#
+<p align="center">
+    <img src="img/8.jpg" alt="Icon" />
+</p>
 
 # ESP 32 Minimini with Bandscan
 <p align="center">
