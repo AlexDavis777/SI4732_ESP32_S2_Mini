@@ -44,3 +44,6 @@ Hold Mode button to activate Bandscan then navigate to adjacent signals using BW
 
 # LZ1PPL
 
+<p align="center">
+    <img src="img/ESP32_LZ1PPL.jpg" alt="Icon" />
+</p>
